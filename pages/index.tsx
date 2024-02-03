@@ -12,22 +12,26 @@ import useInfoModal from "@/hooks/useInfoModal";
 // checking if available session exists and if it doesn't/click Logout
 // it's going to redirect to '/auth' page. 
 export async function getServerSideProps(context: NextPageContext) {
-  const session = await getSession(context);
+  try{
+    const session = await getSession(context);
 
-  if (!session) {
-    return {
-      redirect: {
-        destination: '/auth',
-        permanet: false,
+    if (!session) {
+      return {
+        redirect: {
+          destination: '/auth',
+          permanet: false,
+        }
       }
     }
-  }
 
-  return {
+    return {
     props: {}
+    };
+  } catch (error) {
+    console.error('Error getting session:', error);
+    return { props: {} };
   }
-}
-
+}  
 
 export default function Home() {
   const { data: movies = [] } = useMovieList();
